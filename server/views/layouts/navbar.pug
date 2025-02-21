@@ -1,0 +1,18 @@
+.btn-group-vertical.d-grid.gap-2.col-6.mx-auto(role="group", aria-label="Vertical button group")
+  a.btn.btn-outline-primary(href="/api/session/new", type="button") Sign in
+  a.btn.btn-outline-primary(href="/api/users/new", type="button") Sign up
+  a.btn.btn-outline-primary(href="/api/session/delete", type="button") Sign out
+  .btn-group(role="group")
+    button.btn.btn-outline-primary.dropdown-toggle(type="button", data-bs-toggle="dropdown", aria-expanded="false") Practice
+    ul.dropdown-menu
+      li
+        a.dropdown-item(href="#") Choosing
+      li
+        a.dropdown-item(href="#") Writing
+      li
+        hr.dropdown-divider
+      li
+        a.dropdown-item(href="#") Settings
+  form.d-flex(role="search")
+    input.form-control.me-2(type="search", placeholder="Search", aria-label="Search")
+    button.btn.btn-outline-primary(type="submit") Search

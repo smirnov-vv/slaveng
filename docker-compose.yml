@@ -1,0 +1,6 @@
+services:
+  slaveng:
+    build: .
+    image: vvsmirnov/slaveng
+    volumes:
+      - '.:/app'

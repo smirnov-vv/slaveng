@@ -1,0 +1,5 @@
+# .prettierignore
+node_modules/
+public/
+dist/
+dev.sqlite3
