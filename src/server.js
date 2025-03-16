@@ -9,6 +9,7 @@ import userRoutes from '../server/routes/users.js';
 import offlineRoute from '../server/routes/offline.js';
 import dotenv from 'dotenv';
 import fastifyFormbody from '@fastify/formbody';
+import fastifyCookie from '@fastify/cookie';
 
 dotenv.config();
 
@@ -24,6 +25,9 @@ const app = fastify({
   http2: true,
   https: httpsOptions,
 });
+
+// Register the cookie plugin
+app.register(fastifyCookie);
 
 // Register the Fastify body parser (built-in for application/x-www-form-urlencoded)
 app.register(fastifyFormbody);
