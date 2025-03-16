@@ -2,6 +2,79 @@ extends ./layouts/head.pug
 
 block content
   br
-  center= message
-  br
-  center= tryAgain
+  center
+    b=title
+  center=message
+  if search
+    center=`${search}`
+    br
+    center
+      b toPhonetics IPA:
+    center !{toPhoneticHTML}
+    br
+    center
+      b Cambridge IPA:
+    center !{cambridgeHTML}
+    .btn-group-vertical.d-grid.gap-2.col-6.mx-auto(role="group", aria-label="Vertical button group")
+      a.btn.btn-outline-primary(href=`https://dictionary.cambridge.org/dictionary/english/${search}`, type="button") Cambridge definition
+      a.btn.btn-outline-primary(href=`https://www.oed.com/search/dictionary/?scope=Entries&q=${search}`, type="button") Oxford factsheet
+      a.btn.btn-outline-primary(href=`https://translate.google.ru/?sl=en&tl=ru&text=${search}&op=translate`, type="button") Google translator
+      a.btn.btn-outline-primary(href=`https://translate.yandex.ru/?source_lang=en&target_lang=ru&text=${search}`, type="button") Yandex translator
+      a.btn.btn-outline-primary(href=`https://www.deepl.com/en/translator#en/ru/${search}`, type="button") DeepL translator
+    //
+      form.d-flex.btn-width(id="transcribe", action="https://tophonetics.com/", method="POST")
+        input(type="checkbox", id="weak_forms", name="weak_forms", checked, hidden)
+        input(name="text_to_transcribe", type="hidden", value=search)
+        button.btn.btn-outline-primary.btn-width(type="submit", name="submit") toPhonetics transcription
+
+    script.
+      let phoneticVariants;
+      let iteration;
+
+      // Request cambridge data from its server
+      const fetchCambridgeData = async (search) => {
+        const response = await fetch(`/api/cambridge?content=${search}`);
+        const oldElement = document.getElementById('cambridgeSpinner');
+        const newElement = document.createElement('div');
+        newElement.innerHTML = await response.text();
+        oldElement.parentNode.replaceChild(newElement, oldElement);
+      };
+
+      // Request toPhonetics data from its server
+      const fetchToPhoneticsData = async (search) => {
+        const response = await fetch(`/api/tophonetics?content=${search}`);
+        const oldElement = document.getElementById('toPhoneticsSpinner');
+        const newElement = document.createElement('div');
+        const data = await response.json();
+        phoneticVariants = data.phoneticVariants;
+        newElement.innerHTML = data.toPhoneticHTML;
+        oldElement.parentNode.replaceChild(newElement, oldElement);
+        const ids = Object.keys(phoneticVariants);
+        iteration = ids.reduce((acc, key) => {
+          acc[key] = 0;
+          return acc;
+        }, {});
+        const tooltipList = ids.map(id => {
+          const currentObj = document.getElementById(id);
+          const options = { trigger: 'focus' }; // How tooltip is triggered
+          const tooltips = new bootstrap.Tooltip(currentObj, options);
+        });
+      };
+
+      // Go through transcription variants
+      const rotate = (obj) => {
+        const id = obj.getAttribute('id');
+        const variants = phoneticVariants[id];
+        const length = variants.length;
+        iteration[id] = iteration[id] + 1;
+        if (variants[iteration[id]] === obj.innerHTML) {
+          iteration[id] = iteration[id] + 1;
+        } 
+        iteration[id] = (iteration[id] >= length) ? 0 : iteration[id];
+        obj.innerHTML = variants[iteration[id]];
+        return false;
+      };
+
+      // Call the function after the page loads
+      window.addEventListener('load', fetchToPhoneticsData('#{search}'));
+      window.addEventListener('load', fetchCambridgeData('#{search}'));

@@ -1,0 +1,13 @@
+.btn-group-vertical, .btn-width {
+  width: 90% !important; /* Override width property */
+  padding-top: 5.5% !important; /* Set top padding to X % of the width */
+  padding-bottom: 5.5% !important; /* Set bottom padding to X % of the width */
+  max-width: 350px !important; /* Set max-width constraints */
+  box-sizing: border-box !important; /* Without the property the element's total width can exceed 100% due to the addition of padding and border, causing layout issues like horizontal scrollbars or misaligned elements*/
+  /* overflow-x: hidden !important; /* Prevent horizontal scrollbar but it's excluded since vertical scrolling appears for dropdown menu */
+  display: flex !important; /* Enable flexbox */
+}
+.request-field {
+  min-width: 100px !important;
+  border-color: #0d6efd;
+}

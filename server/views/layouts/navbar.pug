@@ -13,6 +13,23 @@
         hr.dropdown-divider
       li
         a.dropdown-item(href="#") Settings
-  form.d-flex(role="search")
-    input.form-control.me-2(type="search", placeholder="Search", aria-label="Search")
+  form.input-group(id="searchForm", role="search", action="/api/search", method="GET")
+    input.form-control.request-field(id="inputField", type="search", name="content" placeholder="Your request", aria-label="Search")
+    button.btn.btn-outline-primary(id="pasteButton", type="button") Paste
     button.btn.btn-outline-primary(type="submit") Search
+
+script.
+  document.getElementById('pasteButton').addEventListener('click', async () => {
+    try {
+      // Request clipboard content
+      const clipboardText = await navigator.clipboard.readText();
+
+      // Insert clipboard content into the input field
+      document.getElementById('inputField').value = clipboardText;
+
+      // Submit the form
+      // document.getElementById('searchForm').submit();
+    } catch (error) {
+      console.error('Failed to read clipboard content:', error);
+    }
+  });
