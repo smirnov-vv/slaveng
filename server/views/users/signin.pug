@@ -3,7 +3,7 @@ extends ../layouts/head.pug
 block content
   br
   center Sign in form
-  form.btn-group-vertical.d-grid.gap-2.col-6.mx-auto(role="group", aria-label="Vertical button group", action="/api/users", method="POST", enctype="application/x-www-form-urlencoded")
+  form.btn-group-vertical.d-grid.gap-2.col-6.mx-auto(role="group", aria-label="Vertical button group", action="/api/session", method="POST", enctype="application/x-www-form-urlencoded")
     .mb-3
       input.form-control(type="email", name="email",aria-describedby="emailHelp", placeholder="Enter email")
       .form-text#emailHelp We'll never share your email with anyone else.

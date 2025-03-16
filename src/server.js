@@ -13,7 +13,7 @@ import dotenv from 'dotenv';
 import fastifyFormbody from '@fastify/formbody';
 import fastifyCookie from '@fastify/cookie';
 
-dotenv.config();
+dotenv.config(); // Load environment variables
 
 // HTTPS options
 const httpsOptions = {
@@ -52,6 +52,7 @@ app.register(offlineRoute, { prefix: '/api' });
 
 // Custom error handler
 app.setErrorHandler((error, request, reply) => {
+  const isLoggedIn = request.cookies?.token ? true : false;
   if (error.validation) {
     // Handle validation errors
     return reply.status(400).view('index.pug', {
