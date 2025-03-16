@@ -10,6 +10,14 @@ fix:
 	npm run lint:fix
 	npm run format
 
+# Push to slaveng repository
+push:
+	git push origin main
+
+# Pull from slaveng repository
+pull:
+	git pull --rebase origin main
+
 devstart:
 	npm run dev
 
