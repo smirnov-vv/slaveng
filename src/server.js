@@ -55,24 +55,29 @@ app.setErrorHandler((error, request, reply) => {
   if (error.validation) {
     // Handle validation errors
     return reply.status(400).view('index.pug', {
-      statusCode: 400,
-      message: error.message.split('/')[1],
-      tryAgain: 'Try again',
-      details: error,
+      title: error.message.split('/')[1],
+      message: 'Try again',
+      isLoggedIn,
     });
   }
 
   // Handle other errors
+  console.error('setErrorHandler error:', error);
   reply.status(500).view('index.pug', {
-    statusCode: 500,
+    title: 'setErrorHandler error',
     message: 'Internal Server Error',
-    details: error.message,
+    isLoggedIn,
   });
 });
 
-// Example route
+// Starting route
 app.get('/', async (request, reply) => {
-  return reply.view('index.pug', { message: 'Let\'s get started' });
+  const isLoggedIn = request.cookies?.token ? true : false;
+  return reply.view('index.pug', {
+    title: "Let's get started!",
+    message: '',
+    isLoggedIn,
+  });
 });
 
 // Start the server
@@ -81,7 +86,7 @@ const start = async () => {
     await app.listen({ port: 3000, host: '0.0.0.0' }); // In Docker, the host should be 0.0.0.0 to allow external access.
     console.log('Server listening on https://localhost:3000');
   } catch (err) {
-    console.error(err);
+    console.error(`start the server error: ${err}`);
     process.exit(1);
   }
 };
