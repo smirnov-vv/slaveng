@@ -1,42 +1,85 @@
-// public/service-worker.js
 const CACHE_NAME = 'fastify-pwa-cache-v1';
+
 // Fallback pages for offline use
 const urlsToCache = [
   '/',
-  'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
+  '/api/offline',
   '/images/192logo.png',
-  '/images/512logo.png'
+  '/images/512logo.png',
+  '/manifest.json',
+  '/mystyles.css'
 ];
 
 // Install Service Worker and cache fallback resources
 self.addEventListener('install', (event) => {
+  // Skip the "waiting" state and activate the new service worker immediately
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(urlsToCache))
+      .then((cache) => {
+        console.log('Caching URLs:', urlsToCache);
+        return cache.addAll(urlsToCache)
+          .then(() => {
+            console.log('All URLs cached successfully');
+          })
+          .catch((error) => {
+            console.error('Failed to cache URLs:', error);
+          });
+      })
   );
+});
+
+// Activate the new service worker and claim control
+self.addEventListener('activate', (event) => {
+  event.waitUntil(self.clients.claim());
 });
 
 // Fetch event with Network First strategy
 self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    fetch(event.request)
-      .then((networkResponse) => {
-        // Clone the response before using it
-        const responseClone = networkResponse.clone();
+  console.log('Fetching:', event.request.url);
 
-        // Update the cache with the cloned response
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseClone);
-        });
-
-        // Return the original response
-        return networkResponse;
-      })
-      .catch(() => {
-        // If the network fails, serve from the cache
-        return caches.match(event.request).then((cachedResponse) => {
-          return cachedResponse || caches.match('/'); // Fallback to offline resources
-        });
-      })
-  );
+  if (event.request.mode === 'navigate') {
+    // Handle navigation requests
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          console.log('Network response:', event.request.url);
+          const responseClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseClone);
+          });
+          return networkResponse;
+        })
+        .catch(() => {
+          console.log('Network failed, serving /api/offline');
+          return caches.match('/api/offline')
+            .then((offlineResponse) => {
+              if (offlineResponse) {
+                return offlineResponse;
+              } else {
+                return new Response('Offline fallback', {
+                  headers: { 'Content-Type': 'text/html' },
+                });
+              }
+            });
+        })
+    );
+  } else {
+    // Handle non-navigation requests
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          console.log('Network response:', event.request.url);
+          const responseClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseClone);
+          });
+          return networkResponse;
+        })
+        .catch(() => {
+          console.log('Network failed, serving from cache:', event.request.url);
+          return caches.match(event.request);
+        })
+    );
+  }
 });
