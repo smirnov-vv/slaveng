@@ -6,6 +6,8 @@ import fastifyStatic from '@fastify/static';
 import fastifyView from '@fastify/view';
 import pug from 'pug';
 import userRoutes from '../server/routes/users.js';
+import searchRoutes from '../server/routes/search.js';
+import requestRoutes from '../server/routes/requests.js';
 import offlineRoute from '../server/routes/offline.js';
 import dotenv from 'dotenv';
 import fastifyFormbody from '@fastify/formbody';
@@ -44,6 +46,8 @@ app.register(fastifyView, {
 });
 
 app.register(userRoutes, { prefix: '/api' });
+app.register(searchRoutes, { prefix: '/api' });
+app.register(requestRoutes, { prefix: '/api' });
 app.register(offlineRoute, { prefix: '/api' });
 
 // Custom error handler
