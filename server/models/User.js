@@ -12,8 +12,8 @@ export default class User extends Model {
       required: ['email', 'password'], // Fields that are required
       properties: {
         id: { type: 'integer' },
-        email: { type: 'string', minLength: 2, maxLength: 20 },
-        password: { type: 'string', minLength: 5, maxLength: 255 },
+        email: { type: 'string', minLength: 5, maxLength: 40 },
+        password: { type: 'string', minLength: 8, maxLength: 255 },
       },
     };
   }
