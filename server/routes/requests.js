@@ -115,7 +115,7 @@ const getPhoneticData = (DOM) => {
   return ipaVariantsData;
 };
 
-export default async function userRoutes(fastify) {
+const requestRoutes = async (fastify) => {
   fastify.get('/cambridge', async (request, reply) => {
     const search = request.query.content;
     const url = `https://dictionary.cambridge.org/dictionary/english/${search}`;
@@ -147,4 +147,6 @@ export default async function userRoutes(fastify) {
       phoneticVariants,
     });
   });
-}
+};
+
+export default requestRoutes;

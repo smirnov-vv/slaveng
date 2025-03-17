@@ -17,7 +17,7 @@ const routeLevelValidation = {
   },
 };
 
-export default async function userRoutes(fastify) {
+const userRoutes = async (fastify) => {
   fastify.get(
     '/users',
     { preHandler: authentication },
@@ -142,4 +142,6 @@ export default async function userRoutes(fastify) {
       });
     }
   });
-}
+};
+
+export default userRoutes;
