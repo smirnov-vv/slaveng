@@ -76,5 +76,5 @@ block content
       };
 
       // Call the function after the page loads
-      window.addEventListener('load', fetchToPhoneticsData('#{search}'));
-      window.addEventListener('load', fetchCambridgeData('#{search}'));
+      window.addEventListener('load', fetchToPhoneticsData(`!{search}`));
+      window.addEventListener('load', fetchCambridgeData(`!{search}`));
