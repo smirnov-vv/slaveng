@@ -6,7 +6,7 @@ block content
     b=title
   center=message
   if search
-    center=`${search}`
+    center !{requestWithLinks}
     br
     center
       b toPhonetics IPA:
