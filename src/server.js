@@ -19,6 +19,7 @@ dotenv.config(); // Load environment variables
 const httpsOptions = {
   key: fs.readFileSync(path.join(process.cwd(), 'sslcert', 'privkey.pem')),
   cert: fs.readFileSync(path.join(process.cwd(), 'sslcert', 'fullchain.pem')),
+  allowHTTP1: true, // This is useful if some clients do not support HTTP/2
 };
 
 // Initialize Fastify with HTTPS
