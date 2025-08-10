@@ -22,7 +22,7 @@ block content
     br
     center
       b DeepL translation:
-      center
+      // center // Switch on when VPN is no need for deepL
         div#deeplSpinner.spinner-border.text-info(role="status")
           span.visually-hidden Loading...
     br
@@ -43,13 +43,13 @@ block content
       let iteration;
 
       // Request DeepL data from its server
-      // const fetchDeeplData = async (search) => {  Switch on when VPN is no need for deepL
-      //  const response = await fetch(`/api/deepl?content=${search}`);
-      //  const oldElement = document.getElementById('deeplSpinner');
-      //  const newElement = document.createElement('div');
-      //  newElement.innerHTML = await response.text();
-      //  oldElement.parentNode.replaceChild(newElement, oldElement);
-      // };
+       const fetchDeeplData = async (search) => {
+        const response = await fetch(`/api/deepl?content=${search}`);
+        const oldElement = document.getElementById('deeplSpinner');
+        const newElement = document.createElement('div');
+        newElement.innerHTML = await response.text();
+        oldElement.parentNode.replaceChild(newElement, oldElement);
+      };
 
       // Request cambridge data from its server
       const fetchCambridgeData = async (search) => {
@@ -98,4 +98,4 @@ block content
       // Call the function after the page loads
       window.addEventListener('load', fetchToPhoneticsData(`!{search}`));
       window.addEventListener('load', fetchCambridgeData(`!{search}`));
-      window.addEventListener('load', fetchDeeplData(`!{search}`));
+      // window.addEventListener('load', fetchDeeplData(`!{search}`)); // Switch on when VPN is no need for deepL
