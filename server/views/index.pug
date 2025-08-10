@@ -10,18 +10,28 @@ block content
     br
     center
       b toPhonetics IPA:
-    center !{toPhoneticHTML}
+      center
+        div#toPhoneticsSpinner.spinner-border.text-info(role="status")
+          span.visually-hidden Loading...
     br
     center
       b Cambridge IPA:
-    center !{cambridgeHTML}
+      center
+        div#cambridgeSpinner.spinner-border.text-info(role="status")
+          span.visually-hidden Loading...
+    br
+    center
+      b DeepL translation:
+      center
+        div#deeplSpinner.spinner-border.text-info(role="status")
+          span.visually-hidden Loading...
     br
     .btn-group-vertical.d-grid.gap-2.col-6.mx-auto.bottom(role="group", aria-label="Vertical button group")
       a.btn.btn-outline-primary(href=`https://dictionary.cambridge.org/dictionary/english/${search}`, type="button") Cambridge definition
       a.btn.btn-outline-primary(href=`https://www.oed.com/search/dictionary/?scope=Entries&q=${search}`, type="button") Oxford factsheet
       a.btn.btn-outline-primary(href=`https://translate.google.ru/?sl=en&tl=ru&text=${search}&op=translate`, type="button") Google translator
       a.btn.btn-outline-primary(href=`https://translate.yandex.ru/?source_lang=en&target_lang=ru&text=${search}`, type="button") Yandex translator
-      a.btn.btn-outline-primary(href=`https://www.deepl.com/en/translator#en/ru/${search}`, type="button") DeepL translator
+      // a.btn.btn-outline-primary(href=`https://www.deepl.com/en/translator#en/ru/${search}`, type="button") DeepL translator
     //
       form.d-flex.btn-width(id="transcribe", action="https://tophonetics.com/", method="POST")
         input(type="checkbox", id="weak_forms", name="weak_forms", checked, hidden)
@@ -31,6 +41,15 @@ block content
     script.
       let phoneticVariants;
       let iteration;
+
+      // Request DeepL data from its server
+      // const fetchDeeplData = async (search) => {  Switch on when VPN is no need for deepL
+      //  const response = await fetch(`/api/deepl?content=${search}`);
+      //  const oldElement = document.getElementById('deeplSpinner');
+      //  const newElement = document.createElement('div');
+      //  newElement.innerHTML = await response.text();
+      //  oldElement.parentNode.replaceChild(newElement, oldElement);
+      // };
 
       // Request cambridge data from its server
       const fetchCambridgeData = async (search) => {
@@ -79,3 +98,4 @@ block content
       // Call the function after the page loads
       window.addEventListener('load', fetchToPhoneticsData(`!{search}`));
       window.addEventListener('load', fetchCambridgeData(`!{search}`));
+      window.addEventListener('load', fetchDeeplData(`!{search}`));
